@@ -469,6 +469,7 @@ class API(object):
                 )
 
             if response.status_code == 429:
+                self.logger.warning(response.text)
                 sleep_minutes = 5
                 self.logger.warning(
                     "That means 'too many requests'. I'll go to sleep "
