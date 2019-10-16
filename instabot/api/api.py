@@ -468,7 +468,7 @@ class API(object):
                     "That means 'too many requests'. I'll go to sleep "
                     "for {} minutes.".format(sleep_minutes)
                 )
-                time.sleep(sleep_minutes * 60)
+                # time.sleep(sleep_minutes * 60)
             elif response.status_code == 400:
                 response_data = json.loads(response.text)
 
