@@ -382,7 +382,8 @@ class API(object):
         )
         return not self.is_logged_in
 
-    def set_proxy(self):
+    def set_proxy(self, proxy=None):
+        self.proxy = proxy or self.proxy
         if self.proxy:
             parsed = urllib.parse.urlparse(self.proxy)
             scheme = "http://" if not parsed.scheme else ""
