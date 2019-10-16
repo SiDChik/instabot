@@ -320,7 +320,8 @@ class API(object):
         choices = self.get_challenge_choices()
         for choice in choices:
             print(choice)
-        code = input("Insert choice: ")
+        # code = input("Insert choice: ")
+        code = 0
 
         data = json.dumps({"choice": code})
         try:
