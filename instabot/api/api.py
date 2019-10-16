@@ -404,6 +404,7 @@ class API(object):
             self.logger.critical(msg)
             raise Exception(msg)
 
+        self.last_json = {}
         self.session.headers.update(config.REQUEST_HEADERS)
         self.session.headers.update(
             {
