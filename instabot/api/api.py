@@ -41,17 +41,16 @@ try:
 except ImportError:
     JSONDecodeError = ValueError
 
-
 PY2 = sys.version_info[0] == 2
 
 
 class API(object):
     def __init__(
-        self,
-        device=None,
-        base_path="",
-        save_logfile=True,
-        log_filename=None
+            self,
+            device=None,
+            base_path="",
+            save_logfile=True,
+            log_filename=None
     ):
         # Setup device and user_agent
         self.device = device or devices.DEFAULT_DEVICE
@@ -95,11 +94,11 @@ class API(object):
         self.last_json = None
 
     def set_user(
-        self,
-        username,
-        password,
-        generate_all_uuids=True,
-        set_device=True
+            self,
+            username,
+            password,
+            generate_all_uuids=True,
+            set_device=True
     ):
         self.username = username
         self.password = password
@@ -190,29 +189,31 @@ class API(object):
     def save_uuid_and_cookie(self):
         return save_uuid_and_cookie(self)
 
+    def renew_session(self):
+        self.session = requests.Session()
+        self.set_proxy()  # Only happens if `self.proxy`
+
     def login(
-        self,
-        username=None,
-        password=None,
-        force=False,
-        proxy=None,
-        use_cookie=True,
-        use_uuid=True,
-        cookie_fname=None,
-        ask_for_code=False,
-        set_device=True,
-        generate_all_uuids=True,
-        is_threaded=False,
+            self,
+            username=None,
+            password=None,
+            force=False,
+            proxy=None,
+            use_cookie=True,
+            use_uuid=True,
+            cookie_fname=None,
+            ask_for_code=False,
+            set_device=True,
+            generate_all_uuids=True,
+            is_threaded=False,
     ):
         if password is None:
             username, password = get_credentials(username=username)
 
         set_device = generate_all_uuids = True
         self.set_user(username, password)
-        self.session = requests.Session()
-
         self.proxy = proxy
-        self.set_proxy()  # Only happens if `self.proxy`
+        self.renew_session()
 
         self.cookie_fname = cookie_fname
         if self.cookie_fname is None:
@@ -226,8 +227,8 @@ class API(object):
         if use_cookie is True:
             # try:
             if (self.load_uuid_and_cookie(
-                load_cookie=use_cookie,
-                load_uuid=use_uuid
+                    load_cookie=use_cookie,
+                    load_uuid=use_uuid
             ) is True):
                 # Check if the token loaded is valid.
                 if (self.login_flow(False) is True):
@@ -239,11 +240,11 @@ class API(object):
                     force = True
 
         if not cookie_is_loaded and (not self.is_logged_in or force):
-            self.session = requests.Session()
+            self.renew_session()
             if use_uuid is True:
                 if (self.load_uuid_and_cookie(
-                    load_cookie=use_cookie,
-                    load_uuid=use_uuid
+                        load_cookie=use_cookie,
+                        load_uuid=use_uuid
                 ) is False):
                     if set_device is True:
                         self.set_device()
@@ -269,8 +270,8 @@ class API(object):
                 return True
 
             elif self.last_json.get(
-                "error_type",
-                ""
+                    "error_type",
+                    ""
             ) == "checkpoint_challenge_required":
                 self.logger.info("Checkpoint challenge required...")
                 if ask_for_code is True:
@@ -335,9 +336,9 @@ class API(object):
             return False
 
         worked = (
-            ("logged_in_user" in self.last_json)
-            and (self.last_json.get("action", "") == "close")
-            and (self.last_json.get("status", "") == "ok")
+                ("logged_in_user" in self.last_json)
+                and (self.last_json.get("action", "") == "close")
+                and (self.last_json.get("status", "") == "ok")
         )
 
         if worked:
@@ -389,13 +390,13 @@ class API(object):
             self.session.proxies["https"] = scheme + self.proxy
 
     def send_request(
-        self,
-        endpoint,
-        post=None,
-        login=False,
-        with_signature=True,
-        headers=None,
-        extra_sig=None,
+            self,
+            endpoint,
+            post=None,
+            login=False,
+            with_signature=True,
+            headers=None,
+            extra_sig=None,
     ):
         if not self.is_logged_in and not login:
             msg = "Not logged in!"
@@ -409,7 +410,7 @@ class API(object):
                 "X-IG-Connection-Speed": "-1kbps",
                 "X-IG-Bandwidth-Speed-KBPS": str(random.randint(7000, 10000)),
                 "X-IG-Bandwidth-TotalBytes-B":
-                str(random.randint(500000, 900000)),
+                    str(random.randint(500000, 900000)),
                 "X-IG-Bandwidth-TotalTime-MS": str(random.randint(50, 150)),
             }
         )
@@ -584,8 +585,8 @@ class API(object):
             "version": 1,
             "vc_policy": "default",
             "surfaces_to_triggers": '{"5734":["instagram_feed_prompt"],' +
-            '"4715":["instagram_feed_header"],' +
-            '"5858":["instagram_feed_tool_tip"]}',  # noqa
+                                    '"4715":["instagram_feed_header"],' +
+                                    '"5858":["instagram_feed_tool_tip"]}',  # noqa
             "surfaces_to_queries": (
                 '{"5734":"viewer() {eligible_promotions.trigger_context_v2(<tr'
                 'igger_context_v2>).ig_parameters(<ig_parameters>).trigger_nam'
@@ -727,13 +728,13 @@ class API(object):
 
     # ====== PHOTO METHODS ====== #
     def upload_photo(
-        self,
-        photo,
-        caption=None,
-        upload_id=None,
-        from_video=False,
-        force_resize=False,
-        options={},
+            self,
+            photo,
+            caption=None,
+            upload_id=None,
+            from_video=False,
+            force_resize=False,
+            options={},
     ):
         """Upload photo to Instagram
 
@@ -774,7 +775,7 @@ class API(object):
 
     # ====== VIDEO METHODS ====== #
     def upload_video(
-        self, video, caption=None, upload_id=None, thumbnail=None, options={}
+            self, video, caption=None, upload_id=None, thumbnail=None, options={}
     ):
         """Upload video to Instagram
 
@@ -797,24 +798,24 @@ class API(object):
         )
 
     def download_video(
-        self,
-        media_id,
-        filename,
-        media=False,
-        folder="video"
+            self,
+            media_id,
+            filename,
+            media=False,
+            folder="video"
     ):
         return download_video(self, media_id, filename, media, folder)
 
     def configure_video(
-        self,
-        upload_id,
-        video,
-        thumbnail,
-        width,
-        height,
-        duration,
-        caption="",
-        options={},
+            self,
+            upload_id,
+            video,
+            thumbnail,
+            width,
+            height,
+            duration,
+            caption="",
+            options={},
     ):
         """Post Configure Video
         (send caption, thumbnail andmore else to Instagram)
@@ -976,17 +977,17 @@ class API(object):
     # "is_carousel_bumped_post":"false", "container_module":"feed_timeline",
     # "feed_position":"0" # noqa
     def like(
-        self,
-        media_id,
-        double_tap=None,
-        container_module="feed_short_url",
-        feed_position=0,
-        username=None,
-        user_id=None,
-        hashtag_name=None,
-        hashtag_id=None,
-        entity_page_name=None,
-        entity_page_id=None,
+            self,
+            media_id,
+            double_tap=None,
+            container_module="feed_short_url",
+            feed_position=0,
+            username=None,
+            user_id=None,
+            hashtag_name=None,
+            hashtag_id=None,
+            entity_page_name=None,
+            entity_page_id=None,
     ):
 
         data = self.action_data(
@@ -1295,13 +1296,13 @@ class API(object):
     @staticmethod
     def generate_signature(data):
         body = (
-            hmac.new(
-                config.IG_SIG_KEY.encode("utf-8"),
-                data.encode("utf-8"),
-                hashlib.sha256
-            ).hexdigest()
-            + "."
-            + urllib.parse.quote(data)
+                hmac.new(
+                    config.IG_SIG_KEY.encode("utf-8"),
+                    data.encode("utf-8"),
+                    hashlib.sha256
+                ).hexdigest()
+                + "."
+                + urllib.parse.quote(data)
         )
         signature = "ig_sig_key_version={sig_key}&signed_body={body}"
         return signature.format(sig_key=config.SIG_KEY_VERSION, body=body)
@@ -1328,16 +1329,16 @@ class API(object):
             return generated_uuid.replace("-", "")
 
     def get_total_followers_or_followings(  # noqa: C901
-        self,
-        user_id,
-        amount=None,
-        which="followers",
-        filter_private=False,
-        filter_business=False,
-        filter_verified=False,
-        usernames=False,
-        to_file=None,
-        overwrite=False,
+            self,
+            user_id,
+            amount=None,
+            which="followers",
+            filter_private=False,
+            filter_business=False,
+            filter_verified=False,
+            usernames=False,
+            to_file=None,
+            overwrite=False,
     ):
         from io import StringIO
 
@@ -1386,7 +1387,7 @@ class API(object):
                 last_json = self.last_json
                 try:
                     with open(
-                        to_file, "a"
+                            to_file, "a"
                     ) if to_file is not None else StringIO() as f:
                         for item in last_json["users"]:
                             if filter_private and item["is_private"]:
@@ -1467,9 +1468,9 @@ class API(object):
         next_max_id = ""
 
         with tqdm(
-            total=amount,
-            desc="Getting hashtag media.",
-            leave=False
+                total=amount,
+                desc="Getting hashtag media.",
+                leave=False
         ) as pbar:
             while True:
                 self.get_hashtag_feed(hashtag_str, next_max_id)
@@ -1539,13 +1540,13 @@ class API(object):
         return self.send_request("accounts/current_user/?edit=true", data)
 
     def edit_profile(
-        self,
-        url,
-        phone,
-        first_name,
-        biography,
-        email,
-        gender
+            self,
+            url,
+            phone,
+            first_name,
+            biography,
+            email,
+            gender
     ):
         data = self.json_data(
             {
@@ -1615,7 +1616,7 @@ class API(object):
         return self.send_request(url)
 
     def get_reels_tray_feed(
-        self, reason="pull_to_refresh"
+            self, reason="pull_to_refresh"
     ):  # reason can be = cold_start, pull_to_refresh
         data = {
             "supported_capabilities_new": config.SUPPORTED_CAPABILITIES,
@@ -1654,7 +1655,7 @@ class API(object):
         story_seen = {}
         now = int(time.time())
         for i, story in enumerate(
-            sorted(reels, key=lambda m: m["taken_at"], reverse=True)
+                sorted(reels, key=lambda m: m["taken_at"], reverse=True)
         ):
             story_seen_at = now - min(
                 i + 1 + random.randint(0, 2), max(0, now - story["taken_at"])
