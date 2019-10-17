@@ -452,6 +452,7 @@ class API(object):
         else:
             # print(endpoint, post, response.content)
             if response.status_code != 404 and response.status_code != "404":
+                self.logger.warning(response.text)
                 self.logger.error(
                     "Request returns {} error!".format(response.status_code)
                 )
