@@ -304,7 +304,7 @@ class API(object):
         self.logger.info("Username or password is incorrect.")
         delete_credentials()
 
-    def solve_challenge(self):
+    def get_choices(self):
         challenge_url = self.last_json["challenge"]["api_path"][1:]
         try:
             self.send_request(
@@ -318,21 +318,24 @@ class API(object):
             return False
 
         choices = self.get_challenge_choices()
+
+        return choices, challenge_url
+
+    def solve_challenge(self):
+        choices, challenge_url = self.get_choices()
+
         for choice in choices:
             print(choice)
+
+        self.make_choice(challenge_url)
+
         # code = input("Insert choice: ")
-        code = 0
-
-        data = json.dumps({"choice": code})
-        try:
-            self.send_request(challenge_url, data, login=True)
-        except Exception as e:
-            self.logger.error(e)
-            return False
-
         print("A code has been sent to the method selected, please check.")
         code = input("Insert code: ")
 
+        return self.send_code(challenge_url, code)
+
+    def send_code(self, challenge_url, code):
         data = json.dumps({"security_code": code})
         try:
             self.send_request(challenge_url, data, login=True)
@@ -351,6 +354,16 @@ class API(object):
 
         self.logger.error("Not possible to log in. Reset and try again")
         return False
+
+    def make_choice(self, challenge_url, code=0):
+        data = json.dumps({"choice": code})
+        try:
+            self.send_request(challenge_url, data, login=True)
+        except Exception as e:
+            self.logger.error(e)
+            return False
+
+
 
     def get_challenge_choices(self):
         last_json = self.last_json
