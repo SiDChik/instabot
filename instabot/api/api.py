@@ -355,7 +355,7 @@ class API(object):
         self.logger.error("Not possible to log in. Reset and try again")
         return False
 
-    def make_choice(self, challenge_url, code=0):
+    def make_choice(self, challenge_url, code=1):
         data = json.dumps({"choice": code})
         try:
             self.send_request(challenge_url, data, login=True)
