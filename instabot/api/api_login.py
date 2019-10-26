@@ -1,13 +1,14 @@
 import json
 import os
 import random
-import time
 import traceback
 
 import requests
 import requests.utils
+import time
 
 from . import config, devices
+
 
 # ====== SYNC METHODS ====== #
 
@@ -228,7 +229,7 @@ def load_uuid_and_cookie(self, load_uuid=True, load_cookie=True):
                 self.uuid,
                 self.client_session_id,
                 self.device_id,
-                )
+            )
             )
         else:
             self.logger.info(
@@ -252,7 +253,14 @@ def save_uuid_and_cookie(self):
         fname = "{}_uuid_and_cookie.json".format(self.username)
         self.cookie_fname = os.path.join(self.base_path, fname)
 
-    data = {
+    data = get_uuid_and_cookie_data(self)
+
+    with open(self.cookie_fname, "w") as f:
+        json.dump(data, f)
+
+
+def get_uuid_and_cookie_data(self):
+    return {
         "uuids": {
             "phone_id": self.phone_id,
             "uuid": self.uuid,
@@ -268,5 +276,3 @@ def save_uuid_and_cookie(self):
         "device_settings": self.device_settings,
         "user_agent": self.user_agent,
     }
-    with open(self.cookie_fname, "w") as f:
-        json.dump(data, f)
