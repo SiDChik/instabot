@@ -124,7 +124,7 @@ class InstaLib:
                                                  first_name,
                                                  biography,
                                                  email,
-                                                 gender))
+                                                 gender))()
         if self.api.last_json:
             return self.api.last_json
 
