@@ -110,6 +110,9 @@ class InstaLib:
         return False
 
     async def get_profile(self):
+        profile = await wrap(lambda: self.api.get_profile_data())()
+        if self.api.last_json:
+            return self.api.last_json
 
 
     async def login_by_session(self, session_data):
