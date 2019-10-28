@@ -440,7 +440,7 @@ class InstaLib:
                         print('wait 5m')
                         await asyncio.sleep(60 * 5)
                         continue
-                    if api.last_response.status_code % 100 >= 4:
+                    if api.last_response.status_code // 100 >= 4:
                         raise Response4xx
                         continue
                     vals = api.last_json['reels'].values()
