@@ -144,7 +144,7 @@ class InstaLib:
         self.targets.append(target)
 
     async def get_user_id(self, target):
-        f_cache_path = f'./wdir/user_id_{target}'
+        f_cache_path = f'{self.base_path}/user_id_{target}'
         try:
             if os.path.exists(f_cache_path):
                 f = open(f_cache_path, "r")
@@ -182,7 +182,7 @@ class InstaLib:
             if not user_id:
                 continue
 
-            f_cache_path = f'./wdir/tmp_f_{user_id}'
+            f_cache_path = f'{self.base_path}/tmp_f_{user_id}'
             if False and os.path.exists(f_cache_path):
                 f = open(f_cache_path, "r")
                 self.followers = json.loads(f.read())
