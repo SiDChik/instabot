@@ -1569,7 +1569,7 @@ class API(object):
             self,
             url,
             phone,
-            first_name,
+            # first_name,
             biography,
             email,
             gender
@@ -1579,7 +1579,7 @@ class API(object):
                 "external_url": url,
                 "phone_number": phone,
                 "username": self.username.lower(),
-                "full_name": first_name,
+                # "full_name": first_name,
                 "biography": biography,
                 "email": email,
                 "gender": gender,
