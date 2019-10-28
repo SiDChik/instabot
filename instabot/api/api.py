@@ -1578,7 +1578,7 @@ class API(object):
             {
                 "external_url": url,
                 "phone_number": phone,
-                # "username": self.username,
+                "username": self.username.lower(),
                 "full_name": first_name,
                 "biography": biography,
                 "email": email,
