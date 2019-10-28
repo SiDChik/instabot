@@ -48,6 +48,10 @@ class Response429(Exception):
     pass
 
 
+class Response4xx(Exception):
+    pass
+
+
 class API(object):
     def __init__(
             self,
@@ -362,8 +366,6 @@ class API(object):
         except Exception as e:
             self.logger.error(e)
             return False
-
-
 
     def get_challenge_choices(self):
         last_json = self.last_json

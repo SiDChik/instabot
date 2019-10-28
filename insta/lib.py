@@ -4,11 +4,10 @@ import json
 import logging
 import os
 import shutil
-from copy import deepcopy
-from random import shuffle
-
 import time
+from copy import deepcopy
 from itertools import chain
+from random import shuffle
 
 from insta.helpers import divide_chunks, wrap
 from instabot import API
@@ -70,7 +69,7 @@ class InstaLib:
         self.base_path = base_path or './bot_sessions'
 
         self.remove_base_path()
-        
+
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
         self.api = API(base_path=self.base_path, save_logfile=False, device=devices[0])
@@ -114,6 +113,20 @@ class InstaLib:
         if self.api.last_json:
             return self.api.last_json
 
+    async def set_profile(self, url,
+                          phone,
+                          first_name,
+                          biography,
+                          email,
+                          gender):
+        await wrap(lambda: self.api.edit_profile(url,
+                                                 phone,
+                                                 first_name,
+                                                 biography,
+                                                 email,
+                                                 gender))
+        if self.api.last_json:
+            return self.api.last_json
 
     async def login_by_session(self, session_data):
         self.api.set_user(self.username, self.password)
@@ -428,8 +441,7 @@ class InstaLib:
                         await asyncio.sleep(60 * 5)
                         continue
                     if api.last_response.status_code % 100 >= 4:
-                        print('wait')
-                        await asyncio.sleep(1)
+                        raise Response4xx
                         continue
                     vals = api.last_json['reels'].values()
                     break
