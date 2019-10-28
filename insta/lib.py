@@ -15,6 +15,7 @@ from instabot import API
 from instabot.api import config
 from instabot.api import devices as i_devices
 from instabot.api.api import Response429
+from instabot.api.api_login import load_uuid_and_cookie_dict
 from instabot.api.devices import DEVICES
 
 logger = logging.getLogger()
@@ -107,6 +108,12 @@ class InstaLib:
         if self.api.last_json.get("error_type", "") == "checkpoint_challenge_required":
             raise NeedChallenge()
         return False
+
+    async def get_profile(self):
+
+
+    async def login_by_session(self, session_data):
+        load_uuid_and_cookie_dict(self.api, session_data)
 
     async def ask_variants(self):
         return await wrap(lambda: self.api.get_choices())()
