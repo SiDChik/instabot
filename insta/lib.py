@@ -115,13 +115,11 @@ class InstaLib:
 
     async def set_profile(self, url,
                           phone,
-                          first_name,
                           biography,
                           email,
                           gender):
         await wrap(lambda: self.api.edit_profile(url,
                                                  phone,
-                                                 first_name,
                                                  biography,
                                                  email,
                                                  gender))()
