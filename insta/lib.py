@@ -116,6 +116,8 @@ class InstaLib:
 
 
     async def login_by_session(self, session_data):
+        self.api.set_user(self.username, self.password)
+        self.api.renew_session()
         load_uuid_and_cookie_dict(self.api, session_data)
 
     async def ask_variants(self):
