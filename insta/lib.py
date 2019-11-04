@@ -27,9 +27,9 @@ devices = list(DEVICES.keys())
 
 # patch config
 # config.IG_SIG_KEY = '5f3e50f435583c9ae626302a71f7340044087a7e2c60adacfc254205a993e305'
-config.IG_SIG_KEY = 'c36436a942ea1dbb40d7f2d7d45280a620d991ce8c62fb4ce600f0a048c32c11'
-config.REQUEST_HEADERS['X-IG-Capabilities'] = '3brTvw=='
-i_devices.INSTAGRAM_VERSION = '112.0.0.18.152'
+# config.IG_SIG_KEY = 'c36436a942ea1dbb40d7f2d7d45280a620d991ce8c62fb4ce600f0a048c32c11'
+# config.REQUEST_HEADERS['X-IG-Capabilities'] = '3brTvw=='
+# i_devices.INSTAGRAM_VERSION = '112.0.0.18.152'
 
 MAX_STORIES = 200
 MAX_USER_REELS_PACK = 30
