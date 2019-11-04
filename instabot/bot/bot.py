@@ -373,7 +373,8 @@ class Bot(object):
             self.last["updated_followers"] = now
         return self._followers
 
-    def version(self):
+    @staticmethod
+    def version():
         try:
             from pip._vendor import pkg_resources
         except ImportError:
@@ -812,8 +813,8 @@ class Bot(object):
         )
 
     # follow
-    def follow(self, user_id):
-        return follow(self, user_id)
+    def follow(self, user_id, check_user=True):
+        return follow(self, user_id, check_user)
 
     def follow_users(self, user_ids, nfollows=None):
         return follow_users(self, user_ids, nfollows)
