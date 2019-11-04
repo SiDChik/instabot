@@ -69,11 +69,12 @@ class InstaLib:
         self.base_path = base_path or './bot_sessions'
 
         self.remove_base_path()
+        self.proxy = proxy
 
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
         self.api = API(base_path=self.base_path, save_logfile=False, device=devices[0])
-        self.api.proxy = proxy or self.get_proxy()
+        self.api.proxy = self.proxy
 
     def remove_base_path(self):
         try:
@@ -96,7 +97,7 @@ class InstaLib:
             'password': self.password,
             'ask_for_code': ask_code,
             # 'is_threaded': True,
-            'proxy': proxy
+            'proxy': self.proxy
         }
 
         await wrap(lambda: self.api.login(**login_kwargs))()
