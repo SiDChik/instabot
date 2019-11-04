@@ -483,7 +483,7 @@ class API(object):
             self.logger.critical(msg)
             raise Exception(msg)
 
-        print(f'Insta Request: {endpoint} '+ self.session.proxies)
+        # print(f'Insta Request: {endpoint} ')
 
         self.last_json = {}
         self.session.headers.update(config.REQUEST_HEADERS)
