@@ -95,7 +95,7 @@ class InstaLib:
         login_kwargs = {
             'username': self.username,
             'password': self.password,
-            'ask_for_code': ask_code,
+            'ask_for_code': False,
             # 'is_threaded': True,
             'proxy': self.proxy
         }
