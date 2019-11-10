@@ -277,7 +277,7 @@ def get_uuid_and_cookie_data(self):
         "cookie": requests.utils.dict_from_cookiejar(self.session.cookies),
         "timing_value": {
             "last_login": self.last_login,
-            "last_experiments": self.last_experiments,
+            "last_experiments": getattr(self, 'last_experiments'),
         },
         "device_settings": self.device_settings,
         "user_agent": self.user_agent,
