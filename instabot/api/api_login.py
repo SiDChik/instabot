@@ -208,8 +208,8 @@ def load_uuid_and_cookie_dict(self, data, load_uuid=True, load_cookie=True):
             self.session.cookies = requests.utils.cookiejar_from_dict(
                 data["cookie"]
             )
-            cookie_username = self.cookie_dict["ds_user"]
-            assert cookie_username == self.username.lower()
+            # cookie_username = self.cookie_dict["ds_user"]
+            # assert cookie_username == self.username.lower()
 
         if load_uuid:
             self.logger.debug("Loading uuids")
@@ -277,7 +277,7 @@ def get_uuid_and_cookie_data(self):
         "cookie": requests.utils.dict_from_cookiejar(self.session.cookies),
         "timing_value": {
             "last_login": self.last_login,
-            "last_experiments": getattr(self, 'last_experiments'),
+            "last_experiments": getattr(self, 'last_experiments', None),
         },
         "device_settings": self.device_settings,
         "user_agent": self.user_agent,

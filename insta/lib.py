@@ -26,10 +26,9 @@ proxy = None
 devices = list(DEVICES.keys())
 
 # patch config
-# config.IG_SIG_KEY = '5f3e50f435583c9ae626302a71f7340044087a7e2c60adacfc254205a993e305'
-# config.IG_SIG_KEY = 'c36436a942ea1dbb40d7f2d7d45280a620d991ce8c62fb4ce600f0a048c32c11'
+config.IG_SIG_KEY = 'a86109795736d73c9a94172cd9b736917d7d94ca61c9101164894b3f0d43bef4'
 # config.REQUEST_HEADERS['X-IG-Capabilities'] = '3brTvw=='
-# i_devices.INSTAGRAM_VERSION = '112.0.0.18.152'
+i_devices.INSTAGRAM_VERSION = '117.0.0.28.123'
 
 MAX_STORIES = 200
 MAX_USER_REELS_PACK = 30
@@ -73,6 +72,8 @@ class InstaLib:
 
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
+
+        print (f'init {username} proxy:{proxy}')
         self.api = API(base_path=self.base_path, save_logfile=False, device=devices[0])
         self.api.proxy = self.proxy
 
