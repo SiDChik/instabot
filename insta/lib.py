@@ -4,10 +4,11 @@ import json
 import logging
 import os
 import shutil
-import time
 from copy import deepcopy
-from itertools import chain
 from random import shuffle
+
+import time
+from itertools import chain
 
 from insta.helpers import divide_chunks, wrap
 from instabot import API
@@ -73,7 +74,7 @@ class InstaLib:
         if not os.path.exists(self.base_path):
             os.makedirs(self.base_path)
 
-        print (f'init {username} proxy:{proxy}')
+        print(f'init {username} proxy:{proxy}')
         self.api = API(base_path=self.base_path, save_logfile=False, device=devices[0])
         self.api.proxy = self.proxy
 
@@ -109,25 +110,23 @@ class InstaLib:
     async def quiz_story(self, story_id, quiz_id, variant):
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{quiz_id}/story_quiz_answer/'
 
-        data = self.api.json_data(
-            {
-                "_csrftoken": self.api.token,
-                "_uuid": self.api.uuid,
-                'answer': variant,
-            }
-        )
+        data = {
+            "_csrftoken": self.api.token,
+            "_uuid": self.api.uuid,
+            'answer': variant,
+        }
         # data = self.api.generate_signature(data)
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
     # return $this->ig->request("media/{$storyId}/{$pollId}/story_poll_vote/")
-        # ->addPost('_uuid', $this->ig->uuid)
-        # ->addPost('_uid', $this->ig->account_id)
-        # ->addPost('_csrftoken', $this->ig->client->getToken())
-        # ->addPost('radio_type', 'wifi-none')
-        # ->addPost('vote', $votingOption)
-        # ->getResponse(new
-        # Response\ReelMediaViewerResponse());
+    # ->addPost('_uuid', $this->ig->uuid)
+    # ->addPost('_uid', $this->ig->account_id)
+    # ->addPost('_csrftoken', $this->ig->client->getToken())
+    # ->addPost('radio_type', 'wifi-none')
+    # ->addPost('vote', $votingOption)
+    # ->getResponse(new
+    # Response\ReelMediaViewerResponse());
 
     async def login(self, ask_code=False):
         # get proxy
