@@ -91,7 +91,7 @@ class InstaLib:
         return None
 
     async def vote_story(self, story_id, pool_id, variant):
-        url = f'https://i.instagram.com/api/v2/media/{story_id}/{pool_id}/story_poll_vote/'
+        url = f'https://i.instagram.com/api/v1/media/{story_id}/{pool_id}/story_poll_vote/'
 
         data = self.api.json_data(
             {
@@ -106,7 +106,21 @@ class InstaLib:
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
-        # return $this->ig->request("media/{$storyId}/{$pollId}/story_poll_vote/")
+    async def quiz_story(self, story_id, quiz_id, variant):
+        url = f'https://i.instagram.com/api/v1/media/{story_id}/{quiz_id}/story_quiz_answer/'
+
+        data = self.api.json_data(
+            {
+                "_csrftoken": self.api.token,
+                "_uuid": self.api.uuid,
+                'answer': variant,
+            }
+        )
+        data = self.api.generate_signature(data)
+
+        return await wrap(lambda: self.api.session.post(url, data))()
+
+    # return $this->ig->request("media/{$storyId}/{$pollId}/story_poll_vote/")
         # ->addPost('_uuid', $this->ig->uuid)
         # ->addPost('_uid', $this->ig->account_id)
         # ->addPost('_csrftoken', $this->ig->client->getToken())
