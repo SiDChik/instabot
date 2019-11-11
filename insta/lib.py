@@ -116,7 +116,7 @@ class InstaLib:
                 'answer': variant,
             }
         )
-        data = self.api.generate_signature(data)
+        # data = self.api.generate_signature(data)
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
