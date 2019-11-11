@@ -98,7 +98,7 @@ class InstaLib:
                 "_csrftoken": self.api.token,
                 "_uuid": self.api.uuid,
                 "_uid": self.api.user_id,
-                'vote': variant,
+                'vote': str(variant),
                 'radio_type': 'wifi-none'
             }
         )
