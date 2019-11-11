@@ -33,7 +33,7 @@ i_devices.INSTAGRAM_VERSION = '117.0.0.28.123'
 MAX_STORIES = 200
 MAX_USER_REELS_PACK = 30
 
-MAX_USERS_STORIES_PER_INTERVAL = 200
+MAX_USERS_STORIES_PER_INTERVAL = 500
 USERS_STORIES_INTERVAL = 60
 
 
@@ -56,7 +56,7 @@ class InstaLib:
     limits = {
         'followers': {'interval': 60, 'max': 30},
         'reels': {'interval': 60, 'max': 20},
-        'views': {'interval': 60, 'max': 20},
+        'views': {'interval': 60, 'max': 60},
     }
 
     users = set()
@@ -89,6 +89,31 @@ class InstaLib:
         # print('No Proxy')
 
         return None
+
+    async def vote_story(self, story_id, pool_id, variant):
+        url = f'https://i.instagram.com/api/v2/media/{story_id}/{pool_id}/story_poll_vote/'
+
+        data = self.api.json_data(
+            {
+                "_csrftoken": self.api.token,
+                "_uuid": self.api.uuid,
+                "_uid": self.api.user_id,
+                'vote': variant,
+                'radio_type': 'wifi-none'
+            }
+        )
+        data = self.api.generate_signature(data)
+
+        return await wrap(lambda: self.api.session.post(url, data))()
+
+        # return $this->ig->request("media/{$storyId}/{$pollId}/story_poll_vote/")
+        # ->addPost('_uuid', $this->ig->uuid)
+        # ->addPost('_uid', $this->ig->account_id)
+        # ->addPost('_csrftoken', $this->ig->client->getToken())
+        # ->addPost('radio_type', 'wifi-none')
+        # ->addPost('vote', $votingOption)
+        # ->getResponse(new
+        # Response\ReelMediaViewerResponse());
 
     async def login(self, ask_code=False):
         # get proxy
