@@ -107,6 +107,22 @@ class InstaLib:
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
+    async def vote_slider(self, story_id, slider_id, variant):
+        url = f'https://i.instagram.com/api/v1/media/{story_id}/{slider_id}/story_slider_vote/'
+
+        data = self.api.json_data(
+            {
+                "_csrftoken": self.api.token,
+                "_uuid": self.api.uuid,
+                "_uid": self.api.user_id,
+                'vote': str(variant),
+                'radio_type': 'wifi-none'
+            }
+        )
+        data = self.api.generate_signature(data)
+
+        return await wrap(lambda: self.api.session.post(url, data))()
+
     async def quiz_story(self, story_id, quiz_id, variant):
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{quiz_id}/story_quiz_answer/'
 
