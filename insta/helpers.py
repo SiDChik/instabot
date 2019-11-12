@@ -32,3 +32,27 @@ def wrap(func):
         return loop.run_in_executor(executor, pfunc)
 
     return run
+
+
+from copy import deepcopy
+
+
+def dget(d, way, default=None, no_copy=False):
+    way = way.split('.')
+    if not d:
+        return default
+    itr = d
+    value = default
+    try:
+        for key in way:
+            if isinstance(itr, list):
+                key = int(key)
+            itr = itr[key]
+        value = itr
+    except (KeyError, ValueError, IndexError):
+        pass
+
+    if (isinstance(value, object) or isinstance(value, list) or isinstance(value, dict)) and not no_copy:
+        value = deepcopy(value)
+
+    return value

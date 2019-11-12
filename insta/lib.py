@@ -5,12 +5,12 @@ import logging
 import os
 import shutil
 from copy import deepcopy
-from random import shuffle
+from random import shuffle, randint
 
 import time
 from itertools import chain
 
-from insta.helpers import divide_chunks, wrap
+from insta.helpers import divide_chunks, wrap, dget
 from instabot import API
 from instabot.api import config
 from instabot.api import devices as i_devices
@@ -91,7 +91,15 @@ class InstaLib:
 
         return None
 
-    async def vote_story(self, story_id, pool_id, variant):
+    async def vote_story(self, story, variant=None):
+        story_id = story['id']
+
+        pool_id = dget(story, 'story_polls.0.poll_sticker.poll_id')
+        if not pool_id and dget(story, 'story_polls.0.poll_sticker.viewer_can_vote'):
+            return
+
+        variant = randint(0, 1) if variant is None else variant
+
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{pool_id}/story_poll_vote/'
 
         data = self.api.json_data(
@@ -107,8 +115,15 @@ class InstaLib:
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
-    async def vote_slider(self, story_id, slider_id, variant):
+    async def vote_slider(self, story, variant=None):
+        slider_id = dget(story, 'story_sliders.0.slider_sticker.slider_id')
+        if not slider_id and dget(story, 'story_sliders.0.slider_sticker.viewer_can_vote'):
+            return
+
+        story_id = story['id']
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{slider_id}/story_slider_vote/'
+
+        variant = 0.8 + randint(0, 200) / 1000 if variant is None else variant
 
         data = self.api.json_data(
             {
@@ -123,7 +138,22 @@ class InstaLib:
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
-    async def quiz_story(self, story_id, quiz_id, variant):
+    async def quiz_story(self, story, variant=None):
+
+        quiz_id = dget(story, 'story_quizs.0.quiz_sticker.quiz_id')
+        if not quiz_id:
+            return
+
+        tallies = dget(story, 'story_quizs.0.quiz_sticker.tallies')
+        if not isinstance(tallies, list):
+            return
+
+        correct = dget(story, 'story_quizs.0.quiz_sticker.correct_answer')
+
+        variant = correct if variant is None else correct
+
+        story_id = story['pk']
+
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{quiz_id}/story_quiz_answer/'
 
         data = {
@@ -132,6 +162,34 @@ class InstaLib:
             'answer': variant,
         }
         # data = self.api.generate_signature(data)
+
+        return await wrap(lambda: self.api.session.post(url, data))()
+
+    async def answer_question(self, story, answer):
+        story_id = story['id']
+
+        question_id = dget(story, 'story_questions.0.question_sticker.question_id')
+        if not question_id:
+            return
+
+        q_type = dget(story, 'story_questions.0.question_sticker.question_type')
+        if q_type != 'text':
+            return
+
+        url = f'https://i.instagram.com/api/v1/media/{story_id}/{question_id}/story_question_response/'
+
+        data = self.api.json_data(
+            {
+                "_csrftoken": self.api.token,
+                "client_context": self.api.generate_UUID(True),
+                "mutation_token": self.api.generate_UUID(True),
+                "_uuid": self.api.uuid,
+                "type": "text",
+                "_uid": self.api.user_id,
+                'response': answer,
+            }
+        )
+        data = self.api.generate_signature(data)
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
