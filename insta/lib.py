@@ -221,6 +221,10 @@ class InstaLib:
                 print('Wait 1m')
                 await asyncio.sleep(60)
                 continue
+
+        if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
+            raise Response4xx()
+
         if 'user' not in self.api.last_json:
             return None
 
