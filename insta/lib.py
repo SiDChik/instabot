@@ -14,7 +14,7 @@ from insta.helpers import divide_chunks, wrap
 from instabot import API
 from instabot.api import config
 from instabot.api import devices as i_devices
-from instabot.api.api import Response429
+from instabot.api.api import Response429, Response4xx
 from instabot.api.api_login import load_uuid_and_cookie_dict
 from instabot.api.devices import DEVICES
 
@@ -303,17 +303,26 @@ class InstaLib:
 
         await wrap(lambda: api.get_users_reel(c))()
 
+        if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
+            raise Response4xx()
+
     async def view_reels(self, c, api=None):
         api = api or self.api
         await self.check_interval('views')
 
         await wrap(lambda: api.see_reels(c))()
 
+        if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
+            raise Response4xx()
+
     async def get_followers(self, user_id, max_id=None, api=None):
         api = api or self.api
         await self.check_interval('followers')
 
         await wrap(lambda: api.get_user_followers(user_id, max_id=max_id))()
+
+        if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
+            raise Response4xx()
 
     async def extract_users_reels(self):
         _M = {'users_reels': [], 'Watched': 0, 'reels': [], 'watching_reels': True, 'lock': False, 'watched_users': 0}
