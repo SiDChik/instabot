@@ -55,7 +55,7 @@ class InstaLib:
     lock = False
 
     limits = {
-        'followers': {'interval': 60, 'max': 30},
+        'followers': {'interval': 60, 'max': 20},
         'reels': {'interval': 60, 'max': 20},
         'views': {'interval': 60, 'max': 60},
     }
