@@ -69,7 +69,7 @@ def pre_login_flow(self):
     self.set_contact_point_prefill("prefill")
 
 
-def login_flow(self, just_logged_in=False, app_refresh_interval=1800):
+def login_flow(self, just_logged_in=False, app_refresh_interval=1800, refresh=False):
     self.logger.info("LOGIN FLOW! Just logged-in: {}".format(just_logged_in))
     check_flow = []
     if just_logged_in:
@@ -104,7 +104,7 @@ def login_flow(self, just_logged_in=False, app_refresh_interval=1800):
             return False
     else:
         try:
-            pull_to_refresh = random.randint(1, 100) % 2 == 0
+            pull_to_refresh = random.randint(1, 100) % 2 == 0 or refresh
             check_flow.append(
                 self.get_timeline_feed(
                     options=["is_pull_to_refresh"]
@@ -121,7 +121,7 @@ def login_flow(self, just_logged_in=False, app_refresh_interval=1800):
 
             is_session_expired = \
                 (time.time() - self.last_login) > app_refresh_interval
-            if is_session_expired:
+            if is_session_expired or refresh:
                 self.last_login = time.time()
                 self.client_session_id = self.generate_UUID(uuid_type=True)
 
@@ -134,7 +134,7 @@ def login_flow(self, just_logged_in=False, app_refresh_interval=1800):
                 check_flow.append(self.get_profile_notice())
                 check_flow.append(self.explore(False))
 
-            if (time.time() - self.last_experiments) > 7200:
+            if (time.time() - self.last_experiments) > 7200 or refresh:
                 check_flow.append(self.sync_user_features())
                 check_flow.append(self.sync_device_features())
         except Exception as e:

@@ -166,16 +166,21 @@ class API(object):
         return sync_device_features(self, login)
 
     def sync_launcher(self, login=False):
+        self.logger.info("aync_launcher")
         return sync_launcher(self, login)
 
     def sync_user_features(self):
+        self.logger.info("sync user features ")
         return sync_user_features(self)
 
     def pre_login_flow(self):
+        self.logger.info('Prelogin')
         return pre_login_flow(self)
 
-    def login_flow(self, just_logged_in=False, app_refresh_interval=1800):
-        return login_flow(self, just_logged_in, app_refresh_interval)
+    def login_flow(self, just_logged_in=False, app_refresh_interval=1800, refresh=False):
+        self.logger.info('login flow')
+
+        return login_flow(self, just_logged_in, app_refresh_interval, refresh=refresh)
 
     def set_device(self):
         return set_device(self)
@@ -1228,7 +1233,9 @@ class API(object):
         return self.get_user_followings(self.user_id)
 
     def get_user_followers(self, user_id, max_id=""):
-        url = "friendships/{user_id}/followers/?rank_token={rank_token}"
+        url = "friendships/{user_id}/followers/?"
+        url += "search_surface=follow_list_page&query="
+        url += "&rank_token={rank_token}"
         url = url.format(user_id=user_id, rank_token=self.rank_token)
         if max_id:
             url += "&max_id={max_id}".format(max_id=max_id)

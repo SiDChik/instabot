@@ -261,7 +261,8 @@ class TestBotFilter(TestBot):
             responses.GET,
             (
                 "{api_url}friendships/{user_id}/followers/?" +
-                "rank_token={rank_token}"
+                "&rank_token={rank_token}"
+
             ).format(
                 api_url=API_URL,
                 user_id=username,
