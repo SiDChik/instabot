@@ -560,7 +560,8 @@ class API(object):
                 sleep_minutes = 5
                 self.logger.warning(
                     "That means 'too many requests'. I'll go to sleep "
-                    "for {} minutes.".format(sleep_minutes)
+                    "for {} minutes. ".format(sleep_minutes) +
+                    "Request: {}".format(endpoint)
                 )
                 # time.sleep(sleep_minutes * 60)
                 raise Response429()
