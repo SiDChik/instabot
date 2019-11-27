@@ -56,7 +56,7 @@ class InstaLib:
 
     limits = {
         'followers': {'interval': 60, 'max': 20},
-        'reels': {'interval': 60, 'max': 10},
+        'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
     }
 
