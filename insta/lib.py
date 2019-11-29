@@ -165,6 +165,22 @@ class InstaLib:
 
         return await wrap(lambda: self.api.session.post(url, data))()
 
+    async def apply_countdown(self, story):
+        countdown_id = dget(story, 'story_countdowns.0.countdown_sticker.countdown_id')
+        enabled = dget(story, 'story_countdowns.0.countdown_sticker.following_enabled')
+
+        if not enabled:
+            return False
+
+
+        url = f'https://i.instagram.com/api/v1/media/{countdown_id}/follow_story_countdown/'
+
+        data = self.api.json_data({
+
+        })
+        data = self.api.generate_signature(data)
+        return await wrap(lambda: self.api.session.post(url, data))()
+
     async def answer_question(self, story, answer):
         story_id = story['id']
 
