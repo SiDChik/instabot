@@ -78,10 +78,13 @@ class API(object):
         if not os.path.exists("./config/"):
             os.makedirs("./config/")  # create base_path if not exists
 
+        if not os.path.exists("./log/"):
+            os.makedirs("./log/")  # create log folder if not exists
+
         if save_logfile is True:
             if log_filename is None:
                 log_filename = os.path.join(
-                    base_path, "instabot_{}.log".format(id(self))
+                    base_path, "./log/instabot_{}.log".format(id(self))
                 )
 
             fh = logging.FileHandler(filename=log_filename)
@@ -299,7 +302,7 @@ class API(object):
                 else:
                     return False
             elif self.last_json.get("two_factor_required"):
-                if two_factor_auth(self):
+                if self.two_factor_auth():
                     self.save_successful_login()
                     self.login_flow(True)
                     return True
@@ -468,7 +471,7 @@ class API(object):
 
     def set_proxy(self, proxy=None):
         self.proxy = proxy or self.proxy
-        if self.proxy:
+        if getattr(self, 'proxy', None):
             parsed = urllib.parse.urlparse(self.proxy)
             scheme = "http://" if not parsed.scheme else ""
             self.session.proxies["http"] = scheme + self.proxy
@@ -483,6 +486,7 @@ class API(object):
             headers=None,
             extra_sig=None,
     ):
+        self.set_proxy()  # Only happens if `self.proxy`
         if not self.is_logged_in and not login:
             msg = "Not logged in!"
             self.logger.critical(msg)
@@ -559,6 +563,15 @@ class API(object):
                     "Error checking for `feedback_required`, "
                     "response text is not JSON"
                 )
+                self.logger.info(
+                    'Full Response: {}'.format(str(response))
+                )
+                try:
+                    self.logger.info(
+                        'Response Text: {}'.format(str(response.text))
+                    )
+                except Exception as e:
+                    pass
 
             if response.status_code == 429:
                 self.logger.warning(response.text)
@@ -1833,6 +1846,17 @@ class API(object):
 
     def get_presence(self):
         return self.send_request("direct_v2/get_presence/")
+
+    def get_thread(self, thread_id, cursor_id=None):
+        data = {
+            "use_unified_inbox": "true"
+        }
+        if cursor_id is not None:
+            data["cursor"] = cursor_id
+        return self.send_request(
+            "direct_v2/threads/{}/".format(thread_id),
+            json.dumps(data)
+        )
 
     def get_ranked_recipients(self, mode, show_threads, query=None):
         data = {
