@@ -407,7 +407,7 @@ class InstaLib:
         return await wrap(lambda: self.get_graph_followers(user_id, next_max_id=next_max_id))()
 
 
-    def get_graph_followers(self, user_id, , next_max_id=None):
+    def get_graph_followers(self, user_id, next_max_id=None):
         url = "https://www.instagram.com/graphql/query/?query_hash=56066f031e6239f35a904ac20c9f37d9&variables="
         variables = {"id": str(user_id), "first": 50, "include_reel": True, "fetch_mutual": True}
 
