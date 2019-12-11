@@ -7,13 +7,13 @@ import logging
 import os
 import random
 import sys
-import time
 import uuid
 
 import pytz
 import requests
 import requests.utils
 import six.moves.urllib as urllib
+import time
 from requests_toolbelt import MultipartEncoder
 from tqdm import tqdm
 
@@ -207,6 +207,8 @@ class API(object):
 
     def renew_session(self):
         self.session = requests.Session()
+        if not self.session:
+            self.session = requests.Session()
         self.set_proxy()  # Only happens if `self.proxy`
 
     def login(
@@ -545,8 +547,8 @@ class API(object):
             try:
                 response_data = json.loads(response.text)
                 if response_data.get("message") is not None \
-                    and "feedback_required" in str(
-                        response_data.get("message").encode('utf-8')):
+                        and "feedback_required" in str(
+                    response_data.get("message").encode('utf-8')):
                     self.logger.error(
                         "ATTENTION!: `feedback_required`"
                         + str(response_data.get(
