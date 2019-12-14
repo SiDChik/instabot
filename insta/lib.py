@@ -59,10 +59,10 @@ class InstaLib:
     lock = False
 
     limits = {
-        'followers': {'interval': 60, 'max': 20},
+        'followers': {'interval': 60, 'max': 15},
         'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
-        'graph_followers': {'interval': 60, 'max': 60},
+        'graph_followers': {'interval': 60, 'max': 15},
     }
 
     users = set()
