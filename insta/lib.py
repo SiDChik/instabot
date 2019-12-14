@@ -52,6 +52,7 @@ class InstaLib:
     timers = {
         'followers': [],
         'reels': [],
+        'graph_followers': [],
         'views': [],
     }
 
@@ -61,6 +62,7 @@ class InstaLib:
         'followers': {'interval': 60, 'max': 20},
         'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
+        'graph_followers': {'interval': 60, 'max': 60},
     }
 
     users = set()
