@@ -1,12 +1,12 @@
 import asyncio
-import datetime
 import json
 import logging
 import os
-import shutil
 from copy import deepcopy
 from random import shuffle, randint
 
+import datetime
+import shutil
 import time
 from itertools import chain
 
@@ -30,6 +30,9 @@ devices = list(DEVICES.keys())
 config.IG_SIG_KEY = 'a86109795736d73c9a94172cd9b736917d7d94ca61c9101164894b3f0d43bef4'
 # config.REQUEST_HEADERS['X-IG-Capabilities'] = '3brTvw=='
 i_devices.INSTAGRAM_VERSION = '117.0.0.28.123'
+
+for device in DEVICES.values():
+    device['instagram_version'] = i_devices.INSTAGRAM_VERSION
 
 MAX_STORIES = 200
 MAX_USER_REELS_PACK = 30
@@ -171,7 +174,6 @@ class InstaLib:
 
         if not enabled:
             return False
-
 
         url = f'https://i.instagram.com/api/v1/media/{countdown_id}/follow_story_countdown/'
 
@@ -405,7 +407,6 @@ class InstaLib:
     async def async_get_graph_followers(self, user_id, next_max_id=None):
         await self.check_interval('graph_followers')
         return await wrap(lambda: self.get_graph_followers(user_id, next_max_id=next_max_id))()
-
 
     def get_graph_followers(self, user_id, next_max_id=None):
         url = "https://www.instagram.com/graphql/query/?query_hash=56066f031e6239f35a904ac20c9f37d9&variables="
