@@ -54,6 +54,7 @@ class InstaLib:
         'reels': [],
         'graph_followers': [],
         'views': [],
+        'votes': [],
     }
 
     lock = False
@@ -63,6 +64,7 @@ class InstaLib:
         'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
         'graph_followers': {'interval': 60, 'max': 17},
+        'votes': {'interval': 60, 'max': 17},
     }
 
     users = set()
