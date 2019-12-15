@@ -406,13 +406,14 @@ class InstaLib:
         if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
             raise Response4xx()
 
-    async def async_get_graph_followers(self, user_id, next_max_id=None):
-        await self.check_interval('graph_followers')
-        return await wrap(lambda: self.get_graph_followers(user_id, next_max_id=next_max_id))()
+    async def async_get_graph_followers(self, user_id, next_max_id=None, mutual=True, wait=True):
+        if wait:
+            await self.check_interval('graph_followers')
+        return await wrap(lambda: self.get_graph_followers(user_id, next_max_id=next_max_id, mutual=mutual))()
 
-    def get_graph_followers(self, user_id, next_max_id=None):
+    def get_graph_followers(self, user_id, next_max_id=None, mutual=True):
         url = "https://www.instagram.com/graphql/query/?query_hash=56066f031e6239f35a904ac20c9f37d9&variables="
-        variables = {"id": str(user_id), "first": 50, "include_reel": True, "fetch_mutual": True}
+        variables = {"id": str(user_id), "first": 50, "include_reel": True, "fetch_mutual": mutual}
 
         if next_max_id:
             variables['after'] = next_max_id
