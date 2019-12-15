@@ -177,7 +177,7 @@ class InstaLib:
         enabled = dget(story, 'story_countdowns.0.countdown_sticker.following_enabled')
 
         if not enabled:
-            return False
+            return True
 
         url = f'https://i.instagram.com/api/v1/media/{countdown_id}/follow_story_countdown/'
 
@@ -192,11 +192,11 @@ class InstaLib:
 
         question_id = dget(story, 'story_questions.0.question_sticker.question_id')
         if not question_id:
-            return
+            return True
 
         q_type = dget(story, 'story_questions.0.question_sticker.question_type')
         if q_type != 'text':
-            return
+            return True
 
         url = f'https://i.instagram.com/api/v1/media/{story_id}/{question_id}/story_question_response/'
 
