@@ -72,11 +72,11 @@ class InstaLib:
         'graph_followers': {'interval': 60, 'max': 17},
         'votes': {'interval': 60, 'max': 15},
 
-        'pools': {'interval': 60, 'max': 15},
-        'sliders': {'interval': 60, 'max': 15},
-        'quizes': {'interval': 60, 'max': 15},
-        'questions': {'interval': 60, 'max': 15},
-        'countdowns': {'interval': 60, 'max': 15},
+        'pools': {'interval': 60, 'max': 5},
+        'sliders': {'interval': 60, 'max': 5},
+        'quizes': {'interval': 6, 'max': 2},
+        'questions': {'interval': 6, 'max': 2},
+        'countdowns': {'interval': 6, 'max': 2},
     }
 
     users = set()
@@ -386,17 +386,18 @@ class InstaLib:
         if len(timers) >= max_requests_per_interval:
             first = timers.pop(0)
             delta = time.time() - first
-            wait = max(check_interval - delta, 0)
-            if wait > 0 and wait:
-                print(f'Wait {wait} {t}')
-                await asyncio.sleep(wait)
+            wait_s = max(check_interval - delta, 0)
+            if wait_s > 0 and wait:
+                print(f'Wait {wait_s} {t}')
+                await asyncio.sleep(wait_s)
             if not wait:
-                return wait <= 0
+                return wait_s <= 0
         elif not wait:
             return True
 
         if wait:
             timers.append(time.time())
+
     def add_timer(self, t):
         timers = self.timers[t]
         timers.append(time.time())
