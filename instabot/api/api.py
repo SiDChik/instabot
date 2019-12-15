@@ -1,5 +1,4 @@
 import base64
-import datetime
 import hashlib
 import hmac
 import json
@@ -7,15 +6,18 @@ import logging
 import os
 import random
 import sys
-import uuid
 
+import datetime
 import pytz
 import requests
 import requests.utils
 import six.moves.urllib as urllib
 import time
+import uuid
+from requests.adapters import HTTPAdapter
 from requests_toolbelt import MultipartEncoder
 from tqdm import tqdm
+from urllib3 import Retry
 
 from . import config, devices
 from .api_login import (
@@ -207,8 +209,19 @@ class API(object):
 
     def renew_session(self):
         self.session = requests.Session()
-        if not self.session:
-            self.session = requests.Session()
+
+        retries = 30
+
+        retry = Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=0.2,
+            status_forcelist=[500, 502, 503, 504],
+        )
+
+        self.session.mount('http://', HTTPAdapter(max_retries=retry))
+        self.session.mount('https://', HTTPAdapter(max_retries=retry))
         self.set_proxy()  # Only happens if `self.proxy`
 
     def login(
