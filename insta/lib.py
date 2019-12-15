@@ -55,6 +55,12 @@ class InstaLib:
         'graph_followers': [],
         'views': [],
         'votes': [],
+
+        'pools': [],
+        'sliders': [],
+        'quizes': [],
+        'questions': [],
+        'countdowns': []
     }
 
     lock = False
@@ -64,7 +70,13 @@ class InstaLib:
         'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
         'graph_followers': {'interval': 60, 'max': 17},
-        'votes': {'interval': 60, 'max': 17},
+        'votes': {'interval': 60, 'max': 15},
+
+        'pools': {'interval': 60, 'max': 15},
+        'sliders': {'interval': 60, 'max': 15},
+        'quizes': {'interval': 60, 'max': 15},
+        'questions': {'interval': 60, 'max': 15},
+        'countdowns': {'interval': 60, 'max': 15},
     }
 
     users = set()
@@ -366,7 +378,7 @@ class InstaLib:
             print(f'Fetched {target}')
         self.all_f = all_f
 
-    async def check_interval(self, t):
+    async def check_interval(self, t, wait=True):
         timers = self.timers[t]
         max_requests_per_interval = self.limits[t]['max']
         check_interval = self.limits[t]['interval']
@@ -375,10 +387,18 @@ class InstaLib:
             first = timers.pop(0)
             delta = time.time() - first
             wait = max(check_interval - delta, 0)
-            if wait > 0:
+            if wait > 0 and wait:
                 print(f'Wait {wait} {t}')
                 await asyncio.sleep(wait)
+            if not wait:
+                return wait <= 0
+        elif not wait:
+            return True
 
+        if wait:
+            timers.append(time.time())
+    def add_timer(self, t):
+        timers = self.timers[t]
         timers.append(time.time())
 
     async def get_reels(self, c, api=None):
