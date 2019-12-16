@@ -420,9 +420,10 @@ class InstaLib:
         if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
             raise Response4xx()
 
-    async def get_followers(self, user_id, max_id=None, api=None):
+    async def get_followers(self, user_id, max_id=None, api=None, wait=True):
         api = api or self.api
-        await self.check_interval('followers')
+        if wait:
+            await self.check_interval('followers')
 
         await wrap(lambda: api.get_user_followers(user_id, max_id=max_id))()
 
