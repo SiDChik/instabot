@@ -73,7 +73,7 @@ class InstaLib:
         'votes': {'interval': 60, 'max': 15},
 
         'pools': {'interval': 60, 'max': 5},
-        'sliders': {'interval': 60, 'max': 5},
+        'sliders': {'interval': 60, 'max': 4},
         'quizes': {'interval': 6, 'max': 2},
         'questions': {'interval': 6, 'max': 2},
         'countdowns': {'interval': 6, 'max': 2},
