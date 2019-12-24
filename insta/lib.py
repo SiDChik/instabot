@@ -74,7 +74,7 @@ class InstaLib:
 
         'pools': {'interval': 15, 'max': 1},
         'sliders': {'interval': 15, 'max': 1},
-        'quizes': {'interval': 15, 'max': 1},
+        'quizes': {'interval': 10, 'max': 1},
         'questions': {'interval': 150, 'max': 1},
         'countdowns': {'interval': 15, 'max': 1},
     }
