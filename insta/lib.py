@@ -390,6 +390,7 @@ class InstaLib:
             if wait_s <= 0:
                 timers.pop(0)
             if wait_s > 0 and wait:
+                timers.pop(0)
                 print(f'Wait {wait_s} {t}')
                 await asyncio.sleep(wait_s)
             if not wait:
