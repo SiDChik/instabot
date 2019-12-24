@@ -72,11 +72,11 @@ class InstaLib:
         'graph_followers': {'interval': 60, 'max': 17},
         'votes': {'interval': 60, 'max': 15},
 
-        'pools': {'interval': 20, 'max': 1},
-        'sliders': {'interval': 20, 'max': 1},
-        'quizes': {'interval': 60, 'max': 1},
+        'pools': {'interval': 15, 'max': 1},
+        'sliders': {'interval': 15, 'max': 1},
+        'quizes': {'interval': 15, 'max': 1},
         'questions': {'interval': 150, 'max': 1},
-        'countdowns': {'interval': 30, 'max': 1},
+        'countdowns': {'interval': 15, 'max': 1},
     }
 
     users = set()
