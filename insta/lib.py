@@ -384,9 +384,11 @@ class InstaLib:
         check_interval = self.limits[t]['interval']
 
         if len(timers) >= max_requests_per_interval:
-            first = timers.pop(0)
+            first = timers[0]
             delta = time.time() - first
             wait_s = max(check_interval - delta, 0)
+            if wait_s <= 0:
+                timers.pop(0)
             if wait_s > 0 and wait:
                 print(f'Wait {wait_s} {t}')
                 await asyncio.sleep(wait_s)
