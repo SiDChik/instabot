@@ -582,8 +582,7 @@ class API(object):
                 response_data = json.loads(response.text)
                 if response_data.get(
                     "message"
-                ) is not None
-                        and "feedback_required" in str(
+                ) is not None and "feedback_required" in str(
                     response_data.get("message").encode("utf-8")
                 ):
                     self.logger.error(
