@@ -1,20 +1,21 @@
+#!/usr/bin/python
+# - * - coding: utf-8 - * -
+from __future__ import unicode_literals
+
 import getpass
 import os
 import random
 import sys
 import time
-
 from tqdm import tqdm
 
 sys.path.append(os.path.join(sys.path[0], "../"))
-from instabot import Bot  # noqa: E402
-
-
-# initial
+from instabot import Bot
 
 
 def initial_checker():
-    files = [hashtag_file, users_file, whitelist, blacklist, comment, setting]
+    files = [hashtag_file, users_file, whitelist, blacklist, comment, setting_file]
+    # files = [setting_file]
     try:
         for f in files:
             with open(f, "r") as f:
@@ -55,11 +56,11 @@ def read_input(f, msg, n=None):
 # setting function start here
 def setting_input():
     inputs = [
-        ("How many likes do you want to do in a day?", 1000),
-        ("How about unlike? ", 1000),
-        ("How many follows do you want to do in a day? ", 350),
-        ("How about unfollow? ", 350),
-        ("How many comments do you want to do in a day? ", 100),
+        ("How many likes do you want to do in a day?", 100),
+        ("How about unlike? ", 50),
+        ("How many follows do you want to do in a day? ", 75),
+        ("How about unfollow? ", 50),
+        ("How many comments do you want to do in a day? ", 50),
         (
             (
                 "Maximal likes in media you will like?\n"
@@ -70,32 +71,28 @@ def setting_input():
         (
             (
                 "Maximal followers of account you want to follow?\n"
-                "We will skip media that have greater followers than " +
-                "this value "
+                "We will skip media that have greater followers than " + "this value "
             ),
             2000,
         ),
         (
             (
                 "Minimum followers a account should have before we follow?\n"
-                "We will skip media that have lesser followers than " +
-                "this value "
+                "We will skip media that have lesser followers than " + "this value "
             ),
             10,
         ),
         (
             (
                 "Maximum following of account you want to follow?\n"
-                "We will skip media that have a greater following " +
-                "than this value "
+                "We will skip media that have a greater following " + "than this value "
             ),
             7500,
         ),
         (
             (
                 "Minimum following of account you want to follow?\n"
-                "We will skip media that have lesser following " +
-                "from this value "
+                "We will skip media that have lesser following " + "from this value "
             ),
             10,
         ),
@@ -108,23 +105,21 @@ def setting_input():
             ),
             3,
         ),
-        ("Delay from one like to another like you will perform ", 10),
-        ("Delay from one unlike to another unlike you will perform ", 10),
-        ("Delay from one follow to another follow you will perform ", 30),
-        ("Delay from one unfollow to another unfollow you will perform ", 30),
-        ("Delay from one comment to another comment you will perform ", 60),
+        ("Delay from one like to another like you will perform ", 300),
+        ("Delay from one unlike to another unlike you will perform ", 300),
+        ("Delay from one follow to another follow you will perform ", 600),
+        ("Delay from one unfollow to another unfollow you will perform ", 600),
+        ("Delay from one comment to another comment you will perform ", 1200),
         (
-            "Want to use proxy? insert your proxy or leave it blank " +
-            "if no. (just enter",
+            "Want to use proxy? insert your proxy or leave it blank "
+            + "if no. (just enter",
             "None",
         ),
     ]
 
-    with open(setting, "w") as f:
-        while True:
-            for msg, n in inputs:
-                read_input(f, msg, n)
-            break
+    with open(setting_file, "w") as f:
+        for msg, n in inputs:
+            read_input(f, msg, n)
         print("Done with all settings!")
 
 
@@ -151,7 +146,7 @@ def parameter_setting():
         "Proxy: ",
     ]
 
-    with open(setting) as f:
+    with open(setting_file) as f:
         data = f.readlines()
 
     print("Current parameters\n")
@@ -166,11 +161,12 @@ def username_adder():
         while True:
             print("Enter your login: ")
             f.write(str(sys.stdin.readline().strip()) + ":")
-            print("Enter your password: (it will not be shown due to security "
-                  "reasons - just start typing and press Enter)")
+            print(
+                "Enter your password: (it will not be shown due to security "
+                "reasons - just start typing and press Enter)"
+            )
             f.write(getpass.getpass() + "\n")
-            print("Do you want to add another account? (y/n)")
-            if "y" not in sys.stdin.readline():
+            if input("Do you want to add another account? (y/n)").lower() != "y":
                 break
 
 
@@ -377,9 +373,7 @@ def menu_like():
                     .split(" ")
                 )
             else:
-                hashtags.append(
-                    random.choice(bot.read_list_from_file(hashtag_file))
-                )
+                hashtags.append(random.choice(bot.read_list_from_file(hashtag_file)))
             for hashtag in hashtags:
                 bot.like_hashtag(hashtag)
 
@@ -475,9 +469,7 @@ def menu_comment():
                 user_id = input("who?\n").strip()
             else:
                 user_id = random.choice(bot.read_list_from_file(users_file))
-            bot.comment_medias(
-                bot.get_user_medias(user_id, filtration=False)
-            )
+            bot.comment_medias(bot.get_user_medias(user_id, filtration=False))
 
         elif ans == "3":
             print(
@@ -492,9 +484,7 @@ def menu_comment():
                 print(userlist)
             users = bot.read_list_from_file(userlist)
             for user_id in users:
-                bot.comment_medias(bot.get_user_medias(
-                    user_id, filtration=True
-                ))
+                bot.comment_medias(bot.get_user_medias(user_id, filtration=True))
 
         elif ans == "4":
             bot.comment_medias(bot.get_timeline_medias())
@@ -620,89 +610,57 @@ except NameError:
     pass
 
 # files location
-hashtag_file = "hashtagsdb.txt"
-users_file = "usersdb.txt"
-whitelist = "whitelist.txt"
-blacklist = "blacklist.txt"
-userlist = "userlist.txt"
-comment = "comment.txt"
-setting = "setting.txt"
-SECRET_FILE = "secret.txt"
+hashtag_file = "config/hashtag_database.txt"
+users_file = "config/username_database.txt"
+whitelist = "config/whitelist.txt"
+blacklist = "config/blacklist.txt"
+userlist = "config/userlist.txt"
+comment = "config/comments.txt"
+setting_file = "config/setting_multiscript.txt"
+SECRET_FILE = "config/secret.txt"
 
 # check setting first
 initial_checker()
 
-if os.stat(setting).st_size == 0:
+if os.stat(setting_file).st_size == 0:
     print("Looks like setting are broken")
     print("Let's make new one")
     setting_input()
 
-f = open(setting)
+f = open(setting_file)
 lines = f.readlines()
-setting_0 = int(lines[0].strip())
-setting_1 = int(lines[1].strip())
-setting_2 = int(lines[2].strip())
-setting_3 = int(lines[3].strip())
-setting_4 = int(lines[4].strip())
-setting_5 = int(lines[5].strip())
-setting_6 = int(lines[6].strip())
-setting_7 = int(lines[7].strip())
-setting_8 = int(lines[8].strip())
-setting_9 = int(lines[9].strip())
-setting_10 = int(lines[10].strip())
-setting_11 = int(lines[11].strip())
-setting_12 = int(lines[12].strip())
-setting_13 = int(lines[13].strip())
-setting_14 = int(lines[14].strip())
-setting_15 = int(lines[15].strip())
-setting_16 = int(lines[16].strip())
-setting_17 = int(lines[17].strip())
-setting_18 = lines[18].strip()
+settings = []
+for i in range(0, 19):
+    settings.append(lines[i].strip())
 
 bot = Bot(
-    max_likes_per_day=setting_0,
-    max_unlikes_per_day=setting_1,
-    max_follows_per_day=setting_2,
-    max_unfollows_per_day=setting_3,
-    max_comments_per_day=setting_4,
-    max_likes_to_like=setting_5,
-    max_followers_to_follow=setting_6,
-    min_followers_to_follow=setting_7,
-    max_following_to_follow=setting_8,
-    min_following_to_follow=setting_9,
-    max_followers_to_following_ratio=setting_10,
-    max_following_to_followers_ratio=setting_11,
-    min_media_count_to_follow=setting_12,
-    like_delay=setting_13,
-    unlike_delay=setting_14,
-    follow_delay=setting_15,
-    unfollow_delay=setting_16,
-    comment_delay=setting_17,
-    whitelist_file=whitelist,
-    blacklist_file=blacklist,
-    comments_file=comment,
-    stop_words=[
-        "order",
-        "shop",
-        "store",
-        "free",
-        "doodleartindonesia",
-        "doodle art indonesia",
-        "fullofdoodleart",
-        "commission",
-        "vector",
-        "karikatur",
-        "jasa",
-        "open",
-    ],
+    max_likes_per_day=int(settings[0]),
+    max_unlikes_per_day=int(settings[1]),
+    max_follows_per_day=int(settings[2]),
+    max_unfollows_per_day=int(settings[3]),
+    max_comments_per_day=int(settings[4]),
+    max_likes_to_like=int(settings[5]),
+    max_followers_to_follow=int(settings[6]),
+    min_followers_to_follow=int(settings[7]),
+    max_following_to_follow=int(settings[8]),
+    min_following_to_follow=int(settings[9]),
+    max_followers_to_following_ratio=int(settings[10]),
+    max_following_to_followers_ratio=int(settings[11]),
+    min_media_count_to_follow=int(settings[12]),
+    like_delay=int(settings[13]),
+    unlike_delay=int(settings[14]),
+    follow_delay=int(settings[15]),
+    unfollow_delay=int(settings[16]),
+    comment_delay=int(settings[17]),
 )
 
+# TODO parse setting[18] for proxy
 bot.login()
 
 while True:
     try:
         menu()
     except Exception as e:
-        bot.logger.info("error, read exception bellow")
-        bot.logger.info(str(e))
+        bot.logger.exception(str(e))
+        bot.logger.debug("error, retry")
     time.sleep(1)

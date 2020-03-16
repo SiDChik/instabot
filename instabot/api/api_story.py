@@ -42,8 +42,8 @@ def upload_story_photo(self, photo, upload_id=None):
         "upload_id": upload_id,
         "_uuid": self.uuid,
         "_csrftoken": self.token,
-        "image_compression": '{"lib_name":"jt","lib_version":"1.3.0",' +
-        'quality":"87"}',
+        "image_compression": '{"lib_name":"jt","lib_version":"1.3.0",'
+        + 'quality":"87"}',
         "photo": (
             "pending_media_%s.jpg" % upload_id,
             photo_bytes,
@@ -54,20 +54,13 @@ def upload_story_photo(self, photo, upload_id=None):
     m = MultipartEncoder(data, boundary=self.uuid)
     self.session.headers.update(
         {
-            "X-IG-Capabilities": "3Q4=",
-            "X-IG-Connection-Type": "WIFI",
-            "Cookie2": "$Version=1",
-            "Accept-Language": "en-US",
             "Accept-Encoding": "gzip, deflate",
             "Content-type": m.content_type,
             "Connection": "close",
             "User-Agent": self.user_agent,
         }
     )
-    response = self.session.post(
-        config.API_URL + "upload/photo/",
-        data=m.to_string()
-    )
+    response = self.session.post(config.API_URL + "upload/photo/", data=m.to_string())
 
     if response.status_code == 200:
         upload_id = json.loads(response.text).get("upload_id")
@@ -83,9 +76,7 @@ def configure_story(self, upload_id, photo):
         {
             "source_type": 4,
             "upload_id": upload_id,
-            "story_media_creation_date": str(
-                int(time.time()) - randint(11, 20)
-            ),
+            "story_media_creation_date": str(int(time.time()) - randint(11, 20)),
             "client_shared_at": str(int(time.time()) - randint(3, 10)),
             "client_timestamp": str(int(time.time())),
             "configure_mode": 1,  # 1 - REEL_SHARE, 2 - DIRECT_STORY_SHARE

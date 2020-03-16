@@ -178,9 +178,7 @@ def get_timeline_users(self):
         return []
     if "items" in self.api.last_json:
         return [
-            str(i["user"]["pk"])
-            for i in self.api.last_json["items"]
-            if i.get("user")
+            str(i["user"]["pk"]) for i in self.api.last_json["items"] if i.get("user")
         ]
     elif "feed_items" in self.api.last_json:
         return [
@@ -401,6 +399,10 @@ def get_media_id_from_link(self, link):
 
 
 def get_link_from_media_id(self, media_id):
+    if media_id.find("_"):
+        new = media_id.split("_")
+        media_id = new[0]
+
     alphabet = {
         "-": 62,
         "1": 53,
@@ -469,7 +471,7 @@ def get_link_from_media_id(self, media_id):
     }
     result = ""
     while media_id:
-        media_id, char = media_id // 64, media_id % 64
+        media_id, char = int(media_id) // 64, int(media_id) % 64
         result += list(alphabet.keys())[list(alphabet.values()).index(char)]
     return "https://instagram.com/p/" + result[::-1] + "/"
 
@@ -478,10 +480,7 @@ def get_messages(self):
     if self.api.get_inbox_v2():
         return self.api.last_json
     else:
-        self.logger.info(
-            "Messages were not found, "
-            "something went wrong."
-        )
+        self.logger.info("Messages were not found, " "something went wrong.")
         return None
 
 
@@ -517,11 +516,9 @@ def get_muted_friends(self, muted_content):
     """
     self.api.get_muted_friends(muted_content)
     if self.api.last_json.get("users"):
-        return [
-            str(user.get('pk'))
-            for user in self.api.last_json.get('users')
-        ]
+        return [str(user.get("pk")) for user in self.api.last_json.get("users")]
     else:
-        self.logger.info("No users with muted {} "
-                         "in your friends".format(muted_content))
+        self.logger.info(
+            "No users with muted {} " "in your friends".format(muted_content)
+        )
         return []

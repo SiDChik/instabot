@@ -6,22 +6,30 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-  - "3.8-dev"
+  - "3.8"
   - "nightly"
   - "pypy"
-  - "pypy3.5"
+  - "pypy3"
+
+env:
+  - PRE_COMMIT_CMD=""
 
 matrix:
+  include:
+    - name: "pre-commit"
+      python: "3.7"
+      env:
+        - PRE_COMMIT_CMD="pre-commit run --all-files --show-diff-on-failure"
   allow_failures:
-    - python: "3.8-dev"
+    - python: "3.8"
     - python: "nightly"
 
 install:
-  - pip install tox-travis codecov bumpversion pycodestyle
+  - pip install tox-travis codecov bumpversion pre_commit
 
 script:
- - pycodestyle --show-source
  - tox
+ - $PRE_COMMIT_CMD
 
 after_success:
  - codecov
@@ -29,3 +37,5 @@ after_success:
 
 cache: pip
 
+notifications:
+    webhooks: https://www.travisbuddy.com/
