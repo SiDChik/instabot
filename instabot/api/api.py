@@ -403,7 +403,7 @@ class API(object):
     def save_failed_login(self):
         self.logger.info("Username or password is incorrect.")
         delete_credentials()
-        sys.exit()
+        # sys.exit()
 
     def sync_device_features(self, login=False):
         data = {
