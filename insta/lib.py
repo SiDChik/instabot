@@ -69,7 +69,7 @@ class InstaLib:
         'followers': {'interval': 60, 'max': 15},
         'reels': {'interval': 60, 'max': 60},
         'views': {'interval': 60, 'max': 60},
-        'graph_followers': {'interval': 60, 'max': 17},
+        'graph_followers': {'interval': 60, 'max': 15},
         'votes': {'interval': 60, 'max': 15},
 
         'pools': {'interval': 15, 'max': 1},
