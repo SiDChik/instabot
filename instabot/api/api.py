@@ -5,6 +5,8 @@ import json
 import logging
 import os
 import random
+import traceback
+
 import sys
 
 import datetime
@@ -667,6 +669,8 @@ class API(object):
                 self.last_json = json.loads(response.text)
             except Exception:
                 self.logger.error("Error unknown send request")
+                f_ex = traceback.format_exc()
+                self.logger.error(f_ex)
                 pass
             return False
 
