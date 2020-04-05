@@ -82,12 +82,13 @@ class InstaLib:
     users = set()
     proxy_session_id = None
 
-    def __init__(self, username, password, proxy=None, base_path=''):
+    def __init__(self, username, password, proxy=None, base_path='', remove=True):
         self.username = username
         self.password = password
         self.base_path = base_path or './bot_sessions'
 
-        self.remove_base_path()
+        if remove:
+            self.remove_base_path()
         self.proxy = proxy
 
         if not os.path.exists(self.base_path):
@@ -423,15 +424,17 @@ class InstaLib:
         if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
             raise Response4xx()
 
-    async def get_followers(self, user_id, max_id=None, api=None, wait=True):
+    async def get_followers(self, user_id, max_id=None, api=None, wait=True, query=""):
         api = api or self.api
         if wait:
             await self.check_interval('followers')
 
-        await wrap(lambda: api.get_user_followers(user_id, max_id=max_id))()
+        await wrap(lambda: api.get_user_followers(user_id, max_id=max_id, query=query))()
 
         if not self.api.last_response or self.api.last_response.status_code // 100 >= 4:
             raise Response4xx()
+
+        return self.api.last_json
 
     async def async_get_graph_followers(self, user_id, next_max_id=None, mutual=True, wait=True):
         if wait:

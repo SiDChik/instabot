@@ -1263,13 +1263,14 @@ class API(object):
     def get_self_users_following(self):
         return self.get_user_followings(self.user_id)
 
-    def get_user_followers(self, user_id, max_id=""):
+    def get_user_followers(self, user_id, max_id="", query=""):
         url = "friendships/{user_id}/followers/?"
-        url += "search_surface=follow_list_page&query="
+        url += f"search_surface=follow_list_page&query={query}"
         url += "&rank_token={rank_token}"
         url = url.format(user_id=user_id, rank_token=self.rank_token)
         if max_id:
             url += "&max_id={max_id}".format(max_id=max_id)
+        print(url)
         return self.send_request(url)
 
     def get_self_user_followers(self):
