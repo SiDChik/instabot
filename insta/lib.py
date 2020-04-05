@@ -451,7 +451,7 @@ class InstaLib:
         url = url + json.dumps(variables)
 
         logger.info(f'Fetching Followers {user_id}')
-        self.api.send_request(url)
+        # self.api.send_request(url)
         response = self.api.session.get(url)
         return response.json()
 
