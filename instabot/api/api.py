@@ -169,8 +169,10 @@ class API(object):
     # return sync_device_features(self, login)
 
     def sync_launcher(self, login=False):
-        self.logger.info("aync_launcher")
-        return sync_launcher(self, login)
+        self.logger.info("sync_launcher")
+        res = sync_launcher(self, login)
+        self.logger.info("finish sync_launcher")
+        return res
 
     def igtv_browse_feed(self):
         return igtv_browse_feed(self)
